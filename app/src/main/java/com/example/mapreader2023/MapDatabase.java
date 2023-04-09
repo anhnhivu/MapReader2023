@@ -28,10 +28,12 @@ public class MapDatabase {
 
     private static final String FTS_VIRTUAL_TABLE = "nodes";
     public static final String COL_WORD = "node_id";
-
-    public MapDatabase(Context context) {
+    public InputStream inputStream;
+    public MapDatabase(Context context, InputStream inputStream) {
         Log.d("Read DB", "constructor");
-        databaseOpenHelper = new DatabaseOpenHelper(context);
+        this.context = context;
+        this.inputStream = inputStream;
+        databaseOpenHelper = new DatabaseOpenHelper(context, inputStream);
         //databaseOpenHelper.getWritableDatabase();
     }
 

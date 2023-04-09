@@ -19,14 +19,18 @@ import android.view.MenuItem;
 
 import com.example.mapreader2023.databinding.ActivityScrollingBinding;
 
+import java.io.InputStream;
+
 public class ScrollingActivity extends AppCompatActivity {
 
     private ActivityScrollingBinding binding;
-    MapDatabase db = new MapDatabase(this);
+    InputStream inputStream;
+    MapDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.inputStream = getResources().openRawResource(R.raw.test);
 
         binding = ActivityScrollingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -40,6 +44,7 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                db = new MapDatabase(getApplicationContext(), inputStream);
                 Log.d("Read DB", "Trying to read database");
                 Cursor c = db.getWordMatches("amber", null);
                 //Log.d("Read DB", String.valueOf(c.getCount()));

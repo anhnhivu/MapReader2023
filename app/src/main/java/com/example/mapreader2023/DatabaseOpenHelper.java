@@ -37,6 +37,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME_NODE_TO_WAY = "node_to_way";
 
     private static final int DATABASE_VERSION = 1;
+    private  InputStream inputStream;
 
     private static final String FTS_CREATE_TABLE_NODE =
             "CREATE VIRTUAL TABLE " + TABLE_NAME_NODE +
@@ -60,10 +61,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                     COL_NODE_ID + ", " +
                     COL_WAY_ID + ")";
 
-    DatabaseOpenHelper(Context context) {
+    DatabaseOpenHelper(Context context, InputStream inputStream) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         helperContext = context;
-        loadMap();
+        this.inputStream = inputStream;
+        loadMap(inputStream);
         Log.d("Read PBF file", " open constructor" );
 
     }
@@ -77,7 +79,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             mDatabase.execSQL(FTS_CREATE_TABLE_WAY);
             mDatabase.execSQL(FTS_CREATE_TABLE_NODE_TO_WAY);
             Log.d("Read PBF file", " ONCREATE" );
-            loadMap();
+            //loadMap(this.inputStream);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,33 +98,32 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    private void loadMap() {
+    private void loadMap(InputStream inputStream) {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    loadMapContent();
+                    loadMapContent(inputStream);
                     Log.d("Read PBF file", " Load map content" );
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    throw new RuntimeException(e);
                 }
             }
         }).start();
     }
 
-    private void loadMapContent() throws FileNotFoundException {
+    private void loadMapContent(InputStream inputStream) throws FileNotFoundException {
         Log.d("Read PBF file", " load map content" );
         // Record start time of reading
         long startTime = System.currentTimeMillis();
-
-        InputStream inputStream = new FileInputStream("test.pbf");
-
         OsmosisReader reader = new OsmosisReader(inputStream);
-        reader.setSink(new MapReader());
-        reader.run();
+        MapReader mapReader = new MapReader();
+        reader.setSink(mapReader);
 
-        // Record end time of reading
+        reader.run();
+        Log.d("Read PBF file: nodeLen", String.valueOf(mapReader.getNodeLen()));
+        Log.d("Read PBF file: nodeLen", String.valueOf(mapReader.getHighwayLen()));
+        // ReRecord end time of reading
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         Log.d("Read PBF file", totalTime + " ms");
