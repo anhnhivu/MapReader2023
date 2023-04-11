@@ -28,28 +28,14 @@ public class MapDatabase {
 
     private static final String FTS_VIRTUAL_TABLE = "nodes";
     public static final String COL_WORD = "node_id";
-    public InputStream inputStream;
-    public MapDatabase(Context context, InputStream inputStream) {
+
+    public MapDatabase(Context context) {
         Log.d("Read DB", "constructor");
         this.context = context;
-        this.inputStream = inputStream;
-        databaseOpenHelper = new DatabaseOpenHelper(context, inputStream);
-        //databaseOpenHelper.getWritableDatabase();
+        databaseOpenHelper = new DatabaseOpenHelper(context);
     }
 
-//    public MapDatabase(Context c) {
-//        context = c;
-//    }
-//    public MapDatabase open() throws SQLException {
-//        Log.d("Read DB", "constructor");
-//        databaseOpenHelper = new DatabaseOpenHelper(context);
-//        mDatabase = databaseOpenHelper.getWritableDatabase();
-//        return this;
-//    }
-
-//    public void close() {
-//        databaseOpenHelper.close();
-//    }
+    public SQLiteDatabase getDatabase() { return mDatabase;}
 
     public Cursor getWordMatches(String query, String[] columns) {
         String selection = COL_WORD + " MATCH ?";
@@ -62,7 +48,6 @@ public class MapDatabase {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(FTS_VIRTUAL_TABLE);
         Log.d("Read DB", "query");
-
 
         Cursor cursor = builder.query(databaseOpenHelper.getReadableDatabase(),
                 columns, selection, selectionArgs, null, null, null);
