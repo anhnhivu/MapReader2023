@@ -30,7 +30,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.inputStream = getResources().openRawResource(R.raw.test);
+        this.inputStream = getResources().openRawResource(R.raw.vietnam);
 
         binding = ActivityScrollingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -47,7 +47,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 db = new MapDatabase(getApplicationContext(), inputStream);
                 Log.d("Read DB", "Trying to read database");
                 Cursor c = db.getWordMatches("amber", null);
-                //Log.d("Read DB", String.valueOf(c.getCount()));
+                Log.d("Read DB", String.valueOf(c.getCount()));
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             }

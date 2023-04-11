@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class MapReader implements Sink {
             // Nothing to do here
             Node myNode = ((NodeContainer) entityContainer).getEntity();
             nodeLen++;
+            MapDatabase.insertNode(myNode.getId(), myNode.getVersion(), myNode.getTimestamp(), myNode.getLatitude(), myNode.getLongitude());
             //Log.d("Read PBF file", " Woha, it's a node: " + myNode.getId());
         } else if (entityContainer instanceof WayContainer) {
             Way myWay = ((WayContainer) entityContainer).getEntity();

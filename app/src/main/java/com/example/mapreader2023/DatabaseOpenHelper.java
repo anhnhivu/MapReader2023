@@ -31,13 +31,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static final String COL_LAT = "lat";
     public static final String COL_LON = "lon";
 
-    private static final String DATABASE_NAME = "MAPDB";
-    private static final String TABLE_NAME_NODE = "nodes";
-    private static final String TABLE_NAME_WAY = "ways";
-    private static final String TABLE_NAME_NODE_TO_WAY = "node_to_way";
+    public static final String DATABASE_NAME = "MAPDB";
+    public static final String TABLE_NAME_NODE = "nodes";
+    public static final String TABLE_NAME_WAY = "ways";
+    public static final String TABLE_NAME_NODE_TO_WAY = "node_to_way";
 
-    private static final int DATABASE_VERSION = 1;
-    private  InputStream inputStream;
+    public static final int DATABASE_VERSION = 1;
+    public  InputStream inputStream;
 
     private static final String FTS_CREATE_TABLE_NODE =
             "CREATE VIRTUAL TABLE " + TABLE_NAME_NODE +
@@ -68,6 +68,10 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         loadMap(inputStream);
         Log.d("Read PBF file", " open constructor" );
 
+    }
+
+    public SQLiteDatabase getmDatabase() {
+        return mDatabase;
     }
 
     @Override
@@ -122,7 +126,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
         reader.run();
         Log.d("Read PBF file: nodeLen", String.valueOf(mapReader.getNodeLen()));
-        Log.d("Read PBF file: nodeLen", String.valueOf(mapReader.getHighwayLen()));
+        Log.d("Read PBF file: highwayLen", String.valueOf(mapReader.getHighwayLen()));
         // ReRecord end time of reading
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
